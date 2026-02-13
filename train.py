@@ -12,6 +12,7 @@ import time
 from datetime import timedelta
 from typing import Any, Iterable
 
+from mpi4py import MPI
 import torch
 import torch.distributed.checkpoint.stateful
 from torch.distributed.elastic.multiprocessing.errors import record
@@ -36,6 +37,36 @@ from torchtitan.tools.profiling import (
     maybe_enable_profiling,
 )
 
+def init_device():
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+        local_rank = rank % torch.cuda.device_count()
+        torch.cuda.set_device(int(local_rank))
+        backend='nccl'
+    elif torch.xpu.is_available():
+        device = torch.device('xpu')
+        local_rank = os.environ.get('PALS_LOCAL_RANKID') #rank % torch.xpu.device_count()
+        torch.xpu.set_device(int(local_rank))
+        backend='xccl'
+    else:
+        device = torch.device('cpu')
+
+    os.environ['RANK']=str(rank)
+    os.environ['WORLD_SIZE']=str(size)
+    master_addr = socket.gethostname() if rank == 0 else None #"localhost"
+    master_addr = comm.bcast(master_addr, root=0)
+    master_port = "29500"
+    os.environ["LOCAL_RANK"] = str(local_rank)
+    os.environ["MASTER_ADDR"] = master_addr
+    os.environ["MASTER_PORT"] = master_port
+
+    if size > 1:
+        torch.distributed.init_process_group(backend=backend, init_method='env://', rank=int(rank), world_size=int(size))
+    print("Hello World from rank {} of {} on {}".format(rank, size, socket.gethostname()))
+    return rank, size, local_rank, device
 
 class Trainer(torch.distributed.checkpoint.stateful.Stateful):
     # core configs
@@ -734,6 +765,8 @@ def main(trainer_class: type[Trainer]) -> None:
     trainer: Trainer | None = None
 
     try:
+        
+        rank, world_size, local_rank, DEVICE = init_device() #init_distributed()
         trainer = trainer_class(config)
 
         # TODO(local_tensor): Remove this special case once LocalTensor supports
