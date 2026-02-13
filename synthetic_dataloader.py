@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+
+ensure_venv_torchtitan()
+
 from dataclasses import asdict
 from typing import Any
 

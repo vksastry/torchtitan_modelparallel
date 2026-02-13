@@ -4,7 +4,7 @@ description = "Torchtitan llama3 synthetic benchmark (TP/PP/CP)"
 print_config = false
 
 [experimental]
-custom_import = "benchmarks.torchtitan_transformer.synthetic_train_spec"
+custom_import = "benchmarks.torchtitan_transformer.train_spec"
 
 [metrics]
 log_freq = 1
@@ -13,7 +13,7 @@ enable_tensorboard = false
 enable_wandb = false
 
 [model]
-name = "llama3_synthetic"
+name = "llama3_local"
 flavor = "debugmodel"
 hf_assets_path = "./torchtitan/tests/assets/tokenizer"
 
