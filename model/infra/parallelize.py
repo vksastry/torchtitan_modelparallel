@@ -7,7 +7,10 @@
 # This file applies the PT-D parallelisms (except pipeline parallelism) and various
 # training techniques (e.g. activation checkpointing and compile) to the Llama model.
 
-from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+try:
+    from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+except ImportError:
+    from venv_torchtitan import ensure_venv_torchtitan
 
 ensure_venv_torchtitan()
 

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from .venv_torchtitan import ensure_venv_torchtitan
+try:
+    from .venv_torchtitan import ensure_venv_torchtitan
+except ImportError:
+    from venv_torchtitan import ensure_venv_torchtitan
 
 ensure_venv_torchtitan()
 

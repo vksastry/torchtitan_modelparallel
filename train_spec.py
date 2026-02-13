@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+try:
+    from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+except ImportError:
+    from venv_torchtitan import ensure_venv_torchtitan
 
 ensure_venv_torchtitan()
 
@@ -12,17 +15,22 @@ from torchtitan.components.validate import build_validator
 from torchtitan.distributed.pipeline_parallel import pipeline_llm
 from torchtitan.protocols.train_spec import TrainSpec, register_train_spec
 
-from benchmarks.torchtitan_transformer.model import (
-    Transformer,
-    llama3_args,
-    parallelize_llama,
-)
-from benchmarks.torchtitan_transformer.model.state_dict_adapter import (
-    Llama3StateDictAdapter,
-)
-from benchmarks.torchtitan_transformer.synthetic_dataloader import (
-    build_synthetic_dataloader,
-)
+try:
+    from benchmarks.torchtitan_transformer.model import (
+        Transformer,
+        llama3_args,
+        parallelize_llama,
+    )
+    from benchmarks.torchtitan_transformer.model.state_dict_adapter import (
+        Llama3StateDictAdapter,
+    )
+    from benchmarks.torchtitan_transformer.synthetic_dataloader import (
+        build_synthetic_dataloader,
+    )
+except ImportError:
+    from model import Transformer, llama3_args, parallelize_llama
+    from model.state_dict_adapter import Llama3StateDictAdapter
+    from synthetic_dataloader import build_synthetic_dataloader
 
 
 def _build_train_spec() -> TrainSpec:

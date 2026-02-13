@@ -4,7 +4,7 @@ description = "Torchtitan llama3 synthetic benchmark (TP/PP/CP)"
 print_config = false
 
 [experimental]
-custom_import = "benchmarks.torchtitan_transformer.train_spec"
+custom_import = "train_spec"
 
 [metrics]
 log_freq = 1

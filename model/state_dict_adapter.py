@@ -4,7 +4,10 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+try:
+    from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+except ImportError:
+    from venv_torchtitan import ensure_venv_torchtitan
 
 ensure_venv_torchtitan()
 

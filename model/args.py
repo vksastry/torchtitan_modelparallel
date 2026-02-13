@@ -7,7 +7,10 @@
 # Copyright (c) Meta Platforms, Inc. All Rights Reserved.
 
 
-from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+try:
+    from benchmarks.torchtitan_transformer.venv_torchtitan import ensure_venv_torchtitan
+except ImportError:
+    from venv_torchtitan import ensure_venv_torchtitan
 
 ensure_venv_torchtitan()
 
